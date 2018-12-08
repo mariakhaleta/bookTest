@@ -15,16 +15,22 @@ import android.widget.Toast;
 
 import com.example.mariakhaleta.booktest.Books;
 import com.example.mariakhaleta.booktest.R;
+//import com.mysql.cj.jdbc.Driver;
+
+import java.sql.Driver;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.DriverPropertyInfo;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<Books> booksArrayList;  //List items Array
@@ -74,7 +80,42 @@ public class MainActivity extends AppCompatActivity {
         {
             try
             {
-                Class.forName("com.mysql.jdbc.Driver");
+                //Class.forName("com.mysql.jdbc.Driver").newInstance();
+                Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
+                //Class.forName("com.mysql.jdbc.Driver").newInstance();
+                //DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+                Driver driver = new Driver() {
+                    @Override
+                    public Connection connect(String url, Properties info) throws SQLException {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean acceptsURL(String url) throws SQLException {
+                        return false;
+                    }
+
+                    @Override
+                    public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
+                        return new DriverPropertyInfo[0];
+                    }
+
+                    @Override
+                    public int getMajorVersion() {
+                        return 0;
+                    }
+
+                    @Override
+                    public int getMinorVersion() {
+                        return 0;
+                    }
+
+                    @Override
+                    public boolean jdbcCompliant() {
+                        return false;
+                    }
+                };
+                DriverManager.registerDriver(new Driver().);
                 Connection conn = DriverManager.getConnection(DB_URL, USER, PASS); //Connection Object
                 if (conn == null)
                 {
